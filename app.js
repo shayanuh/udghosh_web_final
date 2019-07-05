@@ -372,6 +372,11 @@ app.post('/logout', function(req,res,next){
 // registration details editing rights
 app.post('/register_change', function(req,res){
 
+  var check = encrypt(req.body.name, "udghosh");
+  if(sessionStorage.getItem(check) === null || sessionStorage.getItem(check) === undefined){
+    res.render('index_1', {msg: 'Your session expired, please login again'});
+  }else{
+
   var item = {};
 
   if(req.body.c_l_n != ''){
@@ -454,11 +459,17 @@ app.post('/register_change', function(req,res){
 });
 }
 });
+}
 
 });
 
 // events change details rights
 app.post('/events_change', function(req,res,next){
+
+  var check = encrypt(req.body.name, "udghosh");
+  if(sessionStorage.getItem(check) === null || sessionStorage.getItem(check) === undefined){
+    res.render('index_1', {msg: 'Your session expired, please login again'});
+  }else{
   var item = {};
 
   if(req.body.atheletics != ''){
@@ -583,6 +594,7 @@ app.post('/events_change', function(req,res,next){
 });
 }
 });
+}
 });
 
 
