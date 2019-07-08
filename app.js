@@ -96,6 +96,11 @@ app.get('/525299210b55528ffbd19b7a50a4ef386e208f9d', function(req,res,next){
   res.render('brochure');
 });
 
+//Rules and regulation 
+app.get('/bc0288e7b5aa3d669ee789fd14af95a8', function(req,res,next){
+  res.render('brochure');
+});
+
 // CA
 app.get('/4b3cdf59227ae23ae6373b6f95f6b7a7b39baf9e', function(req,res,next){
   res.render('CA');
@@ -107,7 +112,7 @@ app.get('/5e5c68e29abed08823b94f9bf4ad5108514d5100', function(req,res,next){
 });
 
 // NossqRegisterForm
-app.get('/nossqRegister', function(req,res,next){
+app.get('/6d932840157263669f6f378fa14ee190', function(req,res,next){
   res.render('index_4', {msg: ''});
 });
 
@@ -386,7 +391,7 @@ app.post('/logout', function(req,res,next){
 
 
 // Nossq registration
-app.post('/nossqRegister', function(req,res,next){
+app.post('/6d932840157263669f6f378fa14ee190', function(req,res,next){
 
   if(req.body.password1 == req.body.password2) {
     uid = encrypt(req.body.name, req.body.password1);
@@ -482,7 +487,7 @@ app.post('/nossqRegister', function(req,res,next){
   });
   
   // step 2
-  app.post('/nossqRegistrationStep2', function(req,res,next){
+  app.post('/84109960b0739040331574376a4d759f', function(req,res,next){
   
     var item ={
       PrincipalName : '',
@@ -504,7 +509,6 @@ app.post('/nossqRegister', function(req,res,next){
     truecode = uid.substring(0,6);
   
     let ref = firestore.collection('nossqregistration').doc(uid);
-  console.log("yah tak pahucha");
     let getDoc = ref.get()
     .then(doc => {
       if (!doc.exists) {
@@ -529,7 +533,7 @@ app.post('/nossqRegister', function(req,res,next){
   
   });
   
-  app.post('/nossqLogin', function(req,res){
+  app.post('/7c80234d705934bf8855f208d834ae3b', function(req,res){
     
     // Taking inputs
     var inputusername = req.body.uname;
@@ -590,7 +594,7 @@ app.post('/nossqRegister', function(req,res,next){
 ///////////////////////////////////////////////////////////////  
 
 //nossq details editing rights
-app.post('/change1', function(req,res){
+app.post('/2309bdf3ebe438023410df8f15e52e94', function(req,res){
 
   var check = encrypt(req.body.name, "nossq");
   if(sessionStorage1.getItem(check) === null || sessionStorage1.getItem(check) === undefined){
