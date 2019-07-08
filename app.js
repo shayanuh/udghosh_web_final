@@ -389,9 +389,9 @@ app.post('/logout', function(req,res,next){
 app.post('/6d932840157263669f6f378fa14ee190', function(req,res,next){
 
   if(req.body.password1 == req.body.password2) {
-    uid = encrypt(req.body.name, req.body.password1);
+    var uid = encrypt(req.body.name, req.body.password1);
   
-    code = uid.substring(0,6);
+    var code = uid.substring(0,6);
   
     const output = `
       <p>We have recieved your message at ${new Date(Date.now()).toLocaleString()}</p>
@@ -419,9 +419,9 @@ app.post('/6d932840157263669f6f378fa14ee190', function(req,res,next){
         html: output
     };
   
-    nameid = encrypt(req.body.name, "nossq");
+    var nameid = encrypt(req.body.name, "nossq");
   
-    mailid = encrypt(req.body.mail, "nossq");
+    var mailid = encrypt(req.body.mail, "nossq");
   
     let ref2 = firestore.collection('nossqUsernames').doc(nameid);
   
@@ -499,9 +499,9 @@ app.post('/6d932840157263669f6f378fa14ee190', function(req,res,next){
       Time: conversion(new Date(Date.now()).toLocaleString())
     };
   
-    uid = encrypt(req.body.name, req.body.password);
+    var uid = encrypt(req.body.name, req.body.password);
   
-    truecode = uid.substring(0,6);
+    var truecode = uid.substring(0,6);
   
     let ref = firestore.collection('nossqregistration').doc(uid);
     let getDoc = ref.get()
@@ -528,6 +528,7 @@ app.post('/6d932840157263669f6f378fa14ee190', function(req,res,next){
   
   });
   
+  // nossq login
   app.post('/7c80234d705934bf8855f208d834ae3b', function(req,res){
     
     // Taking inputs
@@ -624,7 +625,7 @@ app.post('/2309bdf3ebe438023410df8f15e52e94', function(req,res){
   var pass = sessionStorage1.getItem(keys);
 
   // generating user Id
-  uid = encrypt(req.body.name, pass['password']);
+  var uid = encrypt(req.body.name, pass['password']);
 
   let ref = firestore.collection('nossqregistration').doc(uid);
 
@@ -1089,5 +1090,86 @@ app.post('/e558b2c957c59a6c9999d7f54947176e', function(req,res,next){     // das
   
   var key = req.body.rdx;
   sessionStorage.removeItem(key);
+  res.redirect('/');      //team
+});
+
+// ----------------Nossq post reqs for logout--------------
+app.post('/a73d96738d3a6c3c6b1f9571b680ba99c5', function(req,res,next){     // dashboard
+  // logout code
+  
+  var key = req.body.rdx;
+  sessionStorage1.removeItem(key);
+
+  res.redirect('/');      //home
+});
+
+/*
+app.post('/17378950eae52994823daf87092150d845', function(req,res,next){     // dashboard
+  // logout code
+  
+  var key = req.body.rdx;
+  sessionStorage1.removeItem(key);
+  res.redirect('/e365d9caf9b7234a92d04292c74c4891befbbf25');      //noosq
+});
+*/
+
+app.post('/2778c4289711e58413eb96c52f42563855', function(req,res,next){     // dashboard
+  // logout code
+  
+  var key = req.body.rdx;
+  sessionStorage1.removeItem(key);
+  res.redirect('/56139fb631d586607a3841992148761f78ae3f31');      //udgchamps
+});
+
+app.post('/87zfd732617ac56976a421343554a49b5gae765465', function(req,res,next){
+  var key = req.body.rdx;
+  sessionStorage1.removeItem(key);     // dashboard
+  res.redirect('/events');      //events
+});
+
+app.post('/e79d0861b5a2cfbd95c2da252aecc79415', function(req,res,next){     // dashboard
+  // logout code
+  
+  var key = req.body.rdx;
+  sessionStorage1.removeItem(key);
+  res.redirect('/c6e7f21e897c7313fab5bd1ed06dd234c777e179');      //social
+});
+app.post('/b70615d8ce8ea8d73e33c48103cca252b5', function(req,res,next){     // dashboard
+  // logout code
+  
+  var key = req.body.rdx;
+  sessionStorage1.removeItem(key);
+  res.redirect('/4b3cdf59227ae23ae6373b6f95f6b7a7b39baf9e');      //CA
+});
+
+app.post('/178c2d8d0e3d6293a44828dc223d66a725', function(req,res,next){     // dashboard
+  // logout code
+  
+  var key = req.body.rdx;
+  sessionStorage1.removeItem(key);
+  res.redirect('/5e5c68e29abed08823b94f9bf4ad5108514d5100');      //gallery
+});
+
+app.post('/0767488b6cb869ee496849a0dc02fd4a75', function(req,res,next){     // dashboard
+  // logout code
+  
+  var key = req.body.rdx;
+  sessionStorage1.removeItem(key);
+  res.redirect('/f2adfb77c515a6bd0f82cf3c65ce60654f7f81b6');      //pronights
+});
+
+app.post('/f70ab7b2ad394d1b39df81b81c759417e5', function(req,res,next){     // dashboard
+  // logout code
+  
+  var key = req.body.rdx;
+  sessionStorage1.removeItem(key);
+  res.redirect('/fb250db707f26b867234c570dfe12a67b0b4d71e');      //team
+});
+
+app.post('/e7558b2c957c59a6c9999d7f54947176e5', function(req,res,next){     // dashboard
+  // logout code
+  
+  var key = req.body.rdx;
+  sessionStorage1.removeItem(key);
   res.redirect('/');      //team
 });
