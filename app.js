@@ -11,6 +11,7 @@ const nodemailer = require('nodemailer');
 const Storage = require('dom-storage');
 
 var sessionStorage = new Storage('./db.json', { strict: false, ws: '  ' });
+var sessionStorage1 = new Storage('./db1.json', { strict: false, ws: '  ' });
 // ------- Firebase settings --------------
 
 var firebase = require("firebase/app");
@@ -103,6 +104,11 @@ app.get('/4b3cdf59227ae23ae6373b6f95f6b7a7b39baf9e', function(req,res,next){
 // Gallery
 app.get('/5e5c68e29abed08823b94f9bf4ad5108514d5100', function(req,res,next){
   res.render('gallery');
+});
+
+// NossqRegisterForm
+app.get('/6d932840157263669f6f378fa14ee190', function(req,res,next){
+  res.render('index_4', {msg: ''});
 });
 
 // Main
@@ -374,6 +380,309 @@ app.post('/logout', function(req,res,next){
     sessionStorage.removeItem(key);
 });
 */
+
+
+
+
+
+// Nossq registration
+app.post('/6d932840157263669f6f378fa14ee190', function(req,res,next){
+
+  if(req.body.password1 == req.body.password2) {
+    uid = encrypt(req.body.name, req.body.password1);
+  
+    code = uid.substring(0,6);
+  
+    const output = `
+      <p>We have recieved your message at ${new Date(Date.now()).toLocaleString()}</p>
+      <p>Your one time code is: ${code}</p>
+      <p>*This is an automatically generated mail. Please do not reply. For any further queries contact Udgosh core team*</p>`
+  
+    let transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false, 
+      auth: {
+        user: 'udghoshiitkresponses@gmail.com',
+        pass: 'responses1234'
+      },
+      tls:{
+        rejectUnauthorized:false
+      }
+    });
+  
+  
+    let mailOptions = {
+        from: '"Udghosh" <udghoshiitkresponses@gmail.com>', 
+        to: req.body.mail,//  list of receivers
+        subject: 'Message recieved',
+        html: output
+    };
+  
+    nameid = encrypt(req.body.name, "nossq");
+  
+    mailid = encrypt(req.body.mail, "nossq");
+  
+    let ref2 = firestore.collection('nossqUsernames').doc(nameid);
+  
+    let ref = firestore.collection('nossqMails').doc(mailid);
+  
+    let getDoc = ref2.get()
+    .then(doc => {
+      if (!doc.exists) {
+  
+          // unique username
+          
+          let getDoc = ref.get()
+            .then(doc => {
+              if (!doc.exists) {
+  
+                var item4 = {
+                  Username : req.body.name
+                };
+                ref2.set(item4);
+  
+                var item3 = {
+                  Mail : req.body.mail
+                };
+  
+                // new user
+                ref.set(item3).then(function(){
+                  transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) {
+                      res.render('index_4', {msg: 'Mail verification failed, Please try again'})
+                    }
+                    else{
+                      res.render('index_5', {msg: 'Verification mail sent.',  name : req.body.name, mail : req.body.mail, password : req.body.password1 })}
+                    });
+                  }).catch(function(error){
+                    res.render('index_4', {msg: 'Something went wrong, Please try again later.'});
+                  });
+  
+                  }
+              else{
+                res.render('index_4', {msg: 'Sorry, this Mail Id already Registered.'});
+              }
+              })
+            .catch(err => {
+                  res.render('index_4', {msg: 'Something went wrong, Please try again later.'});
+                });
+      }else{
+        res.render('index_4', {msg: 'This username already exists, Please try again.'});
+      }
+    })
+    .catch(err => {
+        res.render('index_4', {msg: 'Something went wrong, Please try again later.'});
+    });
+  
+    }else{
+          res.render('index_4', {msg: 'The Passwords are inconsistent, Please try again.'});
+    };
+  
+  });
+  
+  // step 2
+  app.post('/84109960b0739040331574376a4d759f', function(req,res,next){
+  
+    var item ={
+      PrincipalName : '',
+      userName : req.body.name,
+      Mail : req.body.mail,
+      password : req.body.password.toString(),
+      NameOfSchool: '',
+      NoOfStudents: '',
+      Contact1: '',
+      Contact2: '',
+      City: '',
+      PIN: '',
+      Activity: 'False',
+      Time: conversion(new Date(Date.now()).toLocaleString())
+    };
+  
+    uid = encrypt(req.body.name, req.body.password);
+  
+    truecode = uid.substring(0,6);
+  
+    let ref = firestore.collection('nossqregistration').doc(uid);
+    let getDoc = ref.get()
+    .then(doc => {
+      if (!doc.exists) {
+        if (truecode == req.body.code){
+          ref.set(item).then(function(){
+            res.render('index_4', {msg: 'Sucessfully Registered'});
+          }).catch(function(error){
+            res.render('index_4', {msg: 'Something went wrong, Please try again later.'});
+          });
+        }
+        else{
+          res.render('index_4', {msg: 'Verification Code is inconsistent, Please try again.'});
+        }
+      }else{
+          res.render('index_4', {msg: 'Something went wrong, Please try again later.'});
+  
+      }
+    })
+    .catch(err => {
+        res.render('index_4', {msg: 'Something went wrong, Please try again later.'});
+    });
+  
+  });
+  
+  app.post('/7c80234d705934bf8855f208d834ae3b', function(req,res){
+    
+    // Taking inputs
+    var inputusername = req.body.uname;
+    var inputuserpassword = req.body.upassword;
+  
+    // generating user Id
+    uid = encrypt(inputusername, inputuserpassword);
+  
+    let ref = firestore.collection('nossqregistration').doc(uid);
+  
+    let getDoc = ref.get()
+    .then(doc => {    
+      if (!doc.exists) {
+  
+        // no such user exists
+        res.render('index_4', {msg: 'User not Found'});
+  
+      } else {
+          // user exists
+          var item2 = {
+            Activity : 'True'
+          }
+          var updates = { password: inputuserpassword };
+  
+          var keys = encrypt(inputusername, "nossq");
+  
+          sessionStorage1.setItem(keys, updates);
+  
+          ref.update(item2).then(function(){
+  
+          let getDoc2 = ref.get()
+          .then(doc2 => {
+        
+              var datausers = doc2.data();
+  
+              res.render('dashboardNossq', {p_n: datausers['PrincipalName'],
+                                       e_m_i:  datausers['Mail'],
+                                       p_c_n: datausers['Contact1'] ,
+                                       a_c_n:  datausers['Contact2'],
+                                       p_s_d:  datausers['Password'],
+                                       n_o_s:  datausers['NameOfSchool'],
+                                       c_s:  datausers['City'],
+                                       p_c:  datausers['PIN'],
+                                       n_o_st: datausers['NoOfStudents'],
+                                       wdv: encrypt(inputusername, "nossq")});
+              });
+    })
+    };
+    })
+    .catch(err => {
+      res.render('index_4', {msg: 'Something went wrong, Please try again later.'});
+    });
+  });
+
+
+/////
+////////////////////////////////////////////
+///////////////////////////////////////////////////////////////  
+
+//nossq details editing rights
+app.post('/2309bdf3ebe438023410df8f15e52e94', function(req,res){
+
+  var check = encrypt(req.body.name, "nossq");
+  if(sessionStorage1.getItem(check) === null || sessionStorage1.getItem(check) === undefined){
+    res.render('index_4', {msg: 'Your session expired, please login again'});
+  }else{
+
+  var item = {};
+
+  if(req.body.p_n != ''){
+    item['PrincipalName'] = req.body.p_n;
+  };
+  if(req.body.n_o_s != ''){
+    item['NameOfSchool'] = req.body.n_o_s;
+  };
+  if(req.body.n_o_st != ''){
+    item['NoOfStudents'] = req.body.n_o_st;
+  };
+  if(req.body.p_c_n != ''){
+    item['Contact1'] = req.body.p_c_n;
+  };
+  if(req.body.a_c_n != ''){
+    item['Contact2'] = req.body.a_c_n;
+  };
+  if(req.body.c_s != ''){
+    item['City'] = req.body.c_s;
+  };
+  if(req.body.p_c != ''){
+    item['PIN'] = req.body.p_c;
+  };
+
+  var keys = encrypt(req.body.name, "nossq");
+  var pass = sessionStorage1.getItem(keys);
+
+  // generating user Id
+  uid = encrypt(req.body.name, pass['password']);
+
+  let ref = firestore.collection('nossqregistration').doc(uid);
+
+  let getDoc = ref.get()
+  .then(doc => {
+    if (!doc.exists) {
+
+      // no such user exists
+      res.render('index_4', {msg: 'Invalid Credentials while updating Registration details'});
+      sessionStorage1.removeItem(keys);
+
+    } else {
+      
+      ref.update(item).then(function(){
+
+        let getDoc2 = ref.get()
+        .then(doc => {
+          var datausers = doc.data();
+          res.render('dashboardNossq', {p_n: datausers['PrincipalName'],
+                                       e_m_i:  datausers['Mail'],
+                                       p_c_n: datausers['Contact1'] ,
+                                       a_c_n:  datausers['Contact2'],
+                                       p_s_d:  datausers['Password'],
+                                       n_o_s:  datausers['NameOfSchool'],
+                                       c_s:  datausers['City'],
+                                       p_c:  datausers['PIN'],
+                                       n_o_st: datausers['NoOfStudents'],
+                                       wdv: encrypt(req.body.name, "nossq")});
+              });
+  })
+  .catch(err => {
+    console.log('Error getting document', err);
+    sessionStorage1.removeItem(keys);
+    res.render('index_4', {msg: 'Something went wrong, Please try again later.'});
+});
+}
+});
+}
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // registration details editing rights
