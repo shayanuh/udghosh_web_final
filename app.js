@@ -96,11 +96,6 @@ app.get('/525299210b55528ffbd19b7a50a4ef386e208f9d', function(req,res,next){
   res.render('brochure');
 });
 
-//Rules and regulation 
-app.get('/bc0288e7b5aa3d669ee789fd14af95a8', function(req,res,next){
-  res.render('brochure');
-});
-
 // CA
 app.get('/4b3cdf59227ae23ae6373b6f95f6b7a7b39baf9e', function(req,res,next){
   res.render('CA');
